@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:strings="clr-namespace:BartenderCalculator.Resources.Strings"
+             xmlns:vm="clr-namespace:BartenderCalculator.ViewModels"
+             xmlns:dtos="clr-namespace:BartenderCalculator.Contracts.DTO;assembly=BartenderCalculator.Contracts"
+             xmlns:icons="clr-namespace:BartenderCalculator.Resources.Fonts"
+             x:Class="BartenderCalculator.Views.ConfigurationView"
+             x:DataType="vm:ConfigurationViewModel">
+    <StackLayout Padding="10">
+        <Label Text="{x:Static strings:AppResources.ConfigurationVew_NewProductHeadline}" 
+               FontSize="24" />
+        <Entry Placeholder="{x:Static strings:AppResources.ConfigurationView_ProductNamePlaceholder}"
+               Text="{Binding ProductName}"
+               AutomationId="ConfigurationView.ProductName"/>
+        <Entry Placeholder="{x:Static strings:AppResources.ConfigurationView_ProductPrice_Placeholder}" 
+               Keyboard="Numeric" 
+               Text="{Binding ProductPrice}"
+               AutomationId="ConfigurationView.ProductPriceTextField"/>
+        <Button Text="{x:Static strings:AppResources.ConfigurationView_AddProductButton}" 
+                Command="{Binding AddProductCommand}"
+                AutomationId="ConfigurationView.AddProductButton"/>
+        
+        <!-- List of Products -->
+        <ListView ItemsSource="{Binding Products}" 
+                  HasUnevenRows="True"
+                  AutomationId="ConfigurationView.ProductListView">
+            <ListView.Header>
+                <Grid Padding="10" ColumnSpacing="15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Label 
+                        Text="{x:Static strings:AppResources.ConfigurationView_Table_NameHeadline}" 
+                        FontSize="18" 
+                        FontAttributes="Bold"/>
+                    <Label Grid.Column="1" 
+                           Text="{x:Static strings:AppResources.ConfigurationView_Table_PriceHeadline}" 
+                           FontSize="18" 
+                           FontAttributes="Bold"/>
+                </Grid>
+            </ListView.Header>
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="dtos:ProductDto">
+                    <ViewCell>
+                        <Grid Padding="10" ColumnSpacing="15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/><!-- Name -->
+                                <ColumnDefinition Width="*"/><!-- Price -->
+                                <ColumnDefinition Width="Auto"/><!-- Edit Button -->
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Entry Grid.Column="0"
+                                   Text="{Binding Name}" 
+                                   FontSize="16"
+                                   TextColor="Black"
+                                   BackgroundColor="White"
+                                   HorizontalOptions="Fill"
+                                   AutomationId="ConfigurationView.ProductListView.NameTextField"/>
+                            <Entry Grid.Column="1" 
+                                   Text="{Binding Price}" 
+                                   FontSize="16"
+                                   HorizontalOptions="Fill"
+                                   Keyboard="Numeric"
+                                   TextColor="Black"
+                                   BackgroundColor="White"
+                                   AutomationId="ConfigurationView.ProductListView.PriceTextField"/>
+                            <Button Grid.Column="2"
+                                    BackgroundColor="LightBlue"
+                                    TextColor="White"
+                                    CornerRadius="5"
+                                    Padding="10"
+                                    WidthRequest="50"
+                                    HeightRequest="40"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, 
+                                    Path=BindingContext.EditProductCommand}"
+                                    CommandParameter="{Binding .}"
+                                    AutomationId="ConfigurationView.ProductListView.EditProductButton">
+                                <Button.ImageSource>
+                                    <FontImageSource Glyph="{x:Static icons:MaterialIconHelper.SaveIcon}"
+                                                     FontFamily="MaterialIcons"
+                                                     Size="20"
+                                                     Color="White"/>
+                                </Button.ImageSource>
+                            </Button>
+                            <Button Grid.Column="3"
+                                    BackgroundColor="Red"
+                                    TextColor="White"
+                                    CornerRadius="5"
+                                    Padding="10"
+                                    WidthRequest="50"
+                                    HeightRequest="40"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteProductCommand}" 
+                                    CommandParameter="{Binding .}"
+                                    AutomationId="ConfigurationView.ProductListView.DeleteButton">
+                                <Button.ImageSource>
+                                   <FontImageSource Glyph="{x:Static icons:MaterialIconHelper.TrashCan}"
+                                                    FontFamily="MaterialIcons" 
+                                                    Size="20" 
+                                                    Color="White"/>
+                                </Button.ImageSource>
+                            </Button>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
+</ContentPage>

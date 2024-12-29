@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:strings="clr-namespace:BartenderCalculator.Resources.Strings"
+             xmlns:vm="clr-namespace:BartenderCalculator.ViewModels"
+             xmlns:dtos="clr-namespace:BartenderCalculator.Contracts.DTO;assembly=BartenderCalculator.Contracts"
+             xmlns:icons="clr-namespace:BartenderCalculator.Resources.Fonts"
+             x:Class="BartenderCalculator.Views.OrderView"
+             x:DataType="vm:OrderViewModel">
+    <StackLayout Padding="10">
+       <Label Text="{x:Static strings:AppResources.OrderView_AvailableProducts_Headline}" 
+              FontSize="22" 
+              HorizontalOptions="Center"/>
+       <CollectionView ItemsSource="{Binding AvailableProducts}"
+                       VerticalOptions="Fill"
+                       AutomationId="OderView.AvailableProducts">
+           <CollectionView.ItemsLayout>
+               <GridItemsLayout Orientation="Vertical" Span="5"/>
+           </CollectionView.ItemsLayout>
+           <CollectionView.ItemTemplate>
+               <DataTemplate x:DataType="dtos:ProductDto">
+                   <Button Text="{Binding Name}"
+                           Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
+                           Path = BindingContext.AddProductToOrderCommand}"
+                           CommandParameter="{Binding .}"
+                           BackgroundColor="LightBlue"
+                           TextColor="Black"
+                           Padding="10"
+                           Margin="5"
+                           AutomationId="OrderView.AvailableProducts.AddToOrderButton"/>
+               </DataTemplate>
+           </CollectionView.ItemTemplate>
+       </CollectionView>
+       <Label Text="{x:Static strings:AppResources.OrderView_CurrentOrder_Headline}" 
+              FontSize="22" 
+              HorizontalOptions="Center"/>
+       <Label Text="{Binding OrderPrice, StringFormat='{0:C}'}" 
+              FontSize="18" 
+              HorizontalOptions="Center"
+              AutomationId="OrderView.TotalPriceLabel"/>
+       <Button Text="{x:Static strings:AppResources.OrderView_CurrentOder_ClearButton}"
+               Command="{Binding ClearOrderCommand}"
+               BackgroundColor="PaleVioletRed"
+               Margin = "5"
+               Padding = "10"
+               AutomationId="OrderView.ClearOrderButton"/>
+       <!-- Current Order -->
+       <ListView ItemsSource="{Binding CurrentOrder}" 
+                 HasUnevenRows="True"
+                 SelectionMode="None">
+           <ListView.Header>
+               <Grid Padding="10" 
+                     ColumnSpacing="15"
+                     AutomationId="OrderView.CurrentOrderList">
+                   <Grid.ColumnDefinitions>
+                       <!-- Product Name -->
+                       <ColumnDefinition Width="*"/>
+                       <!-- Product Price -->
+                       <ColumnDefinition Width="*"/>
+                       <!-- Quantity -->
+                       <ColumnDefinition Width="*"/>
+                       <!-- Stepper Button -->
+                       <ColumnDefinition Width="*"/>
+                       <!-- Remove Product Button -->
+                       <ColumnDefinition Width="*"/>
+                   </Grid.ColumnDefinitions>
+                   <Label Grid.Column="0" 
+                          Text="{x:Static strings:AppResources.OderView_CurrentOrder_ProductNameColumn}"
+                          HorizontalOptions="Center"/>
+                   <Label Grid.Column="1" 
+                          Text="{x:Static strings:AppResources.OrderView_CurrentOrder_PriceColumn}"
+                          HorizontalOptions="Center"/>
+                   <Label Grid.Column="2" 
+                          Text="{x:Static strings:AppResources.OrderView_CurrentOder_QuantityColumn}"
+                          HorizontalOptions="Center"/>
+               </Grid>
+           </ListView.Header>
+           <ListView.ItemTemplate>
+               <DataTemplate x:DataType="dtos:OrderItemDto">
+                   <ViewCell>
+                       <Grid Padding="10" 
+                             ColumnSpacing="15">
+                           <Grid.ColumnDefinitions>
+                               <ColumnDefinition Width="*"/>
+                               <ColumnDefinition Width="*"/>
+                               <ColumnDefinition Width="*"/>
+                               <ColumnDefinition Width="*"/>
+                               <ColumnDefinition Width="*"/>
+                           </Grid.ColumnDefinitions>
+                           <Label Grid.Column="0" 
+                                  Text="{Binding Product.Name}"
+                                  AutomationId="OrderView.CurrentOrder.ProductNameLabel"
+                                  HorizontalOptions="Center"/>
+                           <Label Grid.Column="1" 
+                                  Text="{Binding Product.Price}"
+                                  HorizontalOptions="Center"/>
+                           <Label Grid.Column="2" 
+                                  Text="{Binding Source={x:Reference QuantityStepper}, Path=Value}"
+                                  AutomationId="OrderView.CurrentOrder.AmountLabel"
+                                  HorizontalOptions="Center"/>
+                           <Stepper Grid.Column="3"
+                                    x:Name="QuantityStepper"
+                                    Minimum="0"
+                                    Value="{Binding Quantity, Mode=TwoWay}"
+                                    ValueChanged="OnStepperValueChanged"
+                                    Increment="1"
+                                    HeightRequest="50"
+                                    HorizontalOptions="Center"
+                                    AutomationId="OrderView.CurrentOrder.Stepper"/>
+                           <Button Grid.Column="4"  
+                                   BackgroundColor="Red"
+                                   TextColor="White"
+                                   CornerRadius="5"
+                                   Padding="10"
+                                   WidthRequest="50"
+                                   HorizontalOptions="Center"
+                                   Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, 
+                                   Path=BindingContext.RemoveProductFromOrderCommand}" 
+                                   CommandParameter="{Binding Product}"
+                                   MinimumHeightRequest="50"
+                                   AutomationId="OrderView.CurrentOrder.RemoveFromOrderButton">
+                               <Button.ImageSource>
+                                   <FontImageSource Glyph="{x:Static icons:MaterialIconHelper.TrashCan}"
+                                                    FontFamily="MaterialIcons" 
+                                                    Size="20" 
+                                                    Color="White"/>
+                               </Button.ImageSource>
+                           </Button>
+                       </Grid>
+                   </ViewCell>
+               </DataTemplate>
+           </ListView.ItemTemplate>
+       </ListView>
+    </StackLayout>
+</ContentPage>
