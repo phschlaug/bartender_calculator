@@ -81,4 +81,25 @@
     <data name="Alert.InvalidProductPrice.Text" xml:space="preserve">
         <value>Der Preis darf nicht 0 sein</value>
     </data>
+    <data name="ConfigurationView.Title" xml:space="preserve">
+        <value>Konfigurierte Produkte</value>
+    </data>
+    <data name="OrderView.Title" xml:space="preserve">
+        <value>Bestellung erfassen</value>
+    </data>
+    <data name="OrderView.DeleteButton.SemanticPropertiesDescription" xml:space="preserve">
+        <value>Entfernt Produkt von Bestellung</value>
+    </data>
+    <data name="ConfigurationView.DeleteButton.SemanticProperties.Description" xml:space="preserve">
+        <value>Produkt löschen</value>
+    </data>
+    <data name="ConfigurationView.EditButton.SemanticProperties.Description" xml:space="preserve">
+        <value>Änderungen speichern</value>
+    </data>
+    <data name="MainView.SemanticDescription.ConfigView" xml:space="preserve">
+        <value>Konfigurationsansicht Navigationsseite</value>
+    </data>
+    <data name="MainView.SemanticDescription.OrderView" xml:space="preserve">
+        <value>Bestellungansicht Navigationsseite</value>
+    </data>
 </root>

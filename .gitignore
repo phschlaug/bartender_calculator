@@ -4,3 +4,4 @@ src/maui_app/BartenderCalculator/.idea
 obj
 bin
 .idea
+*.keystore

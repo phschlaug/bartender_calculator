@@ -6,19 +6,26 @@
              xmlns:dtos="clr-namespace:BartenderCalculator.Contracts.DTO;assembly=BartenderCalculator.Contracts"
              xmlns:icons="clr-namespace:BartenderCalculator.Resources.Fonts"
              x:Class="BartenderCalculator.Views.ConfigurationView"
-             x:DataType="vm:ConfigurationViewModel">
-    <StackLayout Padding="10">
+             x:DataType="vm:ConfigurationViewModel"
+             Title="{x:Static strings:AppResources.ConfigurationView_Title}">
+    <StackLayout Padding="10"
+                 VerticalOptions="Fill"
+                 HorizontalOptions="Fill">
         <Label Text="{x:Static strings:AppResources.ConfigurationVew_NewProductHeadline}" 
-               FontSize="24" />
+               FontSize="24"
+               SemanticProperties.Description="{x:Static strings:AppResources.ConfigurationView_Title}"/>
         <Entry Placeholder="{x:Static strings:AppResources.ConfigurationView_ProductNamePlaceholder}"
-               Text="{Binding ProductName}"
-               AutomationId="ConfigurationView.ProductName"/>
+                                                                    Text="{Binding ProductName}"
+                                                                    MinimumHeightRequest="48"
+                                                                    AutomationId="ConfigurationView.ProductName"/>
         <Entry Placeholder="{x:Static strings:AppResources.ConfigurationView_ProductPrice_Placeholder}" 
-               Keyboard="Numeric" 
+               Keyboard="Numeric"
+               MinimumHeightRequest="48"
                Text="{Binding ProductPrice}"
                AutomationId="ConfigurationView.ProductPriceTextField"/>
         <Button Text="{x:Static strings:AppResources.ConfigurationView_AddProductButton}" 
                 Command="{Binding AddProductCommand}"
+                MinimumHeightRequest="48"
                 AutomationId="ConfigurationView.AddProductButton"/>
         
         <!-- List of Products -->
@@ -58,6 +65,7 @@
                                    TextColor="Black"
                                    BackgroundColor="White"
                                    HorizontalOptions="Fill"
+                                   MinimumHeightRequest="48"
                                    AutomationId="ConfigurationView.ProductListView.NameTextField"/>
                             <Entry Grid.Column="1" 
                                    Text="{Binding Price}" 
@@ -73,10 +81,11 @@
                                     CornerRadius="5"
                                     Padding="10"
                                     WidthRequest="50"
-                                    HeightRequest="40"
+                                    MinimumHeightRequest="48"
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, 
                                     Path=BindingContext.EditProductCommand}"
                                     CommandParameter="{Binding .}"
+                                    SemanticProperties.Description="{x:Static strings:AppResources.ConfigurationView_EditButton_SemanticProperties_Description}"
                                     AutomationId="ConfigurationView.ProductListView.EditProductButton">
                                 <Button.ImageSource>
                                     <FontImageSource Glyph="{x:Static icons:MaterialIconHelper.SaveIcon}"
@@ -91,14 +100,15 @@
                                     CornerRadius="5"
                                     Padding="10"
                                     WidthRequest="50"
-                                    HeightRequest="40"
+                                    MinimumHeightRequest="48"
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteProductCommand}" 
                                     CommandParameter="{Binding .}"
+                                    SemanticProperties.Description="{x:Static strings:AppResources.ConfigurationView_DeleteButton_SemanticProperties_Description}"
                                     AutomationId="ConfigurationView.ProductListView.DeleteButton">
                                 <Button.ImageSource>
                                    <FontImageSource Glyph="{x:Static icons:MaterialIconHelper.TrashCan}"
                                                     FontFamily="MaterialIcons" 
-                                                    Size="20" 
+                                                    Size="20"
                                                     Color="White"/>
                                 </Button.ImageSource>
                             </Button>

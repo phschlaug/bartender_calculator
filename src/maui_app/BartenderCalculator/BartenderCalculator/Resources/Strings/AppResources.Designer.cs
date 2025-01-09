@@ -170,5 +170,47 @@ namespace BartenderCalculator.Resources.Strings {
                 return ResourceManager.GetString("Alert.InvalidProductPrice.Text", resourceCulture);
             }
         }
+        
+        internal static string ConfigurationView_Title {
+            get {
+                return ResourceManager.GetString("ConfigurationView.Title", resourceCulture);
+            }
+        }
+        
+        internal static string OrderView_Title {
+            get {
+                return ResourceManager.GetString("OrderView.Title", resourceCulture);
+            }
+        }
+        
+        internal static string OrderView_DeleteButton_SemanticPropertiesDescription {
+            get {
+                return ResourceManager.GetString("OrderView.DeleteButton.SemanticPropertiesDescription", resourceCulture);
+            }
+        }
+        
+        internal static string ConfigurationView_DeleteButton_SemanticProperties_Description {
+            get {
+                return ResourceManager.GetString("ConfigurationView.DeleteButton.SemanticProperties.Description", resourceCulture);
+            }
+        }
+        
+        internal static string ConfigurationView_EditButton_SemanticProperties_Description {
+            get {
+                return ResourceManager.GetString("ConfigurationView.EditButton.SemanticProperties.Description", resourceCulture);
+            }
+        }
+        
+        internal static string MainView_SemanticDescription_ConfigView {
+            get {
+                return ResourceManager.GetString("MainView.SemanticDescription.ConfigView", resourceCulture);
+            }
+        }
+        
+        internal static string MainView_SemanticDescription_OrderView {
+            get {
+                return ResourceManager.GetString("MainView.SemanticDescription.OrderView", resourceCulture);
+            }
+        }
     }
 }

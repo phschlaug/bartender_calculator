@@ -9,15 +9,22 @@ public partial class MobileMainView
         InitializeComponent();
         configurationView.AutomationId = "ConfigurationView";
         
-        Children.Add(new NavigationPage(configurationView)
+        var configurationNavigationPage = new NavigationPage(configurationView)
         {
             Title = AppResources.ConfigurationView_TabText,
             AutomationId = "ConfigurationView"
-        });
-        Children.Add(new NavigationPage(orderView)
+        };
+        SemanticProperties.SetDescription(configurationNavigationPage, 
+            AppResources.MainView_SemanticDescription_ConfigView);
+        var orderNavigationPage = new NavigationPage(orderView)
         {
             Title = AppResources.OrderView_TabText,
             AutomationId = "OrderView"
-        });
+        };
+        SemanticProperties.SetDescription(orderNavigationPage,
+            AppResources.MainView_SemanticDescription_OrderView);
+        
+        Children.Add(configurationNavigationPage);
+        Children.Add(orderNavigationPage);
     }
 }
