@@ -11,4 +11,9 @@ public class OrderItemDto
         Product = product;
         Quantity = quantity;
     }
+
+    public override string ToString()
+    {
+        return $"Order Item Product: {Product.Name}, Quantity: {Quantity}, TotalPrice: {TotalPrice}";
+    }
 }

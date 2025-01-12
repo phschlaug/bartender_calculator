@@ -1,10 +1,12 @@
 ﻿using Bartender.SqlLite;
 using BartenderCalculator.Alert;
 using BartenderCalculator.Contracts;
+using BartenderCalculator.Interface;
 using BartenderCalculator.ViewModels;
 using BartenderCalculator.Views;
 using Microsoft.Extensions.Logging;
 using BartenderCalculator.Logging;
+using BartenderCalculator.Services;
 
 namespace BartenderCalculator;
 
@@ -25,6 +27,9 @@ public static class MauiProgram
         var dbPath = Path.Combine(FileSystem.AppDataDirectory, "products.db");
         var database = new Database(dbPath);
         builder.Services.AddSingleton<IDatabase>(database);
+        
+        //Register services
+        builder.Services.AddSingleton<IOrderService, OrderService>();
         
         // Register ViewModel
         builder.Services.AddTransient<ConfigurationViewModel>();

@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using BartenderCalculator.Contracts;
 using BartenderCalculator.Contracts.DTO;
+using BartenderCalculator.Interface;
 using Microsoft.Extensions.Logging;
 
 namespace BartenderCalculator.ViewModels;
@@ -11,7 +12,7 @@ namespace BartenderCalculator.ViewModels;
 public class OrderViewModel: INotifyPropertyChanged
 {
     public ObservableCollection<ProductDto> AvailableProducts { get; set; }
-    public ObservableCollection<OrderItemDto> CurrentOrder { get; set; }
+    public ObservableCollection<OrderItemViewModel> CurrentOrder { get; set; }
     
     public ICommand AddProductToOrderCommand { get; set; }
     public ICommand RemoveProductFromOrderCommand { get; set; }
@@ -20,8 +21,9 @@ public class OrderViewModel: INotifyPropertyChanged
     private decimal _orderPrice;
     private readonly IDatabase _database;
     private readonly ILogger<OrderViewModel> _logger;
+    private readonly IOrderService _orderService;
 
-    public OrderViewModel(IDatabase database, ILogger<OrderViewModel> logger)
+    public OrderViewModel(IDatabase database, ILogger<OrderViewModel> logger, IOrderService orderService)
     {
         _logger = logger;
         _database = database;
@@ -32,6 +34,7 @@ public class OrderViewModel: INotifyPropertyChanged
         AddProductToOrderCommand = new Command<ProductDto>(AddProductToOrder);
         RemoveProductFromOrderCommand = new Command<ProductDto>(RemoveProductFromOrder);
         ClearOrderCommand = new Command(ClearCurrentOrder);
+        _orderService = orderService;
         OrderPrice = 0;
     }
     
@@ -53,47 +56,43 @@ public class OrderViewModel: INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    private void OnCollectionItemChanged(OrderItemDto orderItem)
-    {
-        var index = CurrentOrder.IndexOf(orderItem);
-        CurrentOrder[index] = orderItem;
-    }
     private void AddProductToOrder(ProductDto product)
     {
-        var currentOrderItem = CurrentOrder.FirstOrDefault(orderItem => orderItem.Product.Id == product.Id);
-        if (currentOrderItem != null)
-        {
-            _logger.LogDebug($"Increase Quantity of {product.Name}");
-            currentOrderItem.Quantity++;
-            OnCollectionItemChanged(currentOrderItem);
-        }
-        else
-        {
-            _logger.LogDebug($"Add Product to {product.Name}");
-            CurrentOrder.Add(new OrderItemDto(product));
-        }
-        UpdateTotalPrice();
+        _logger.LogDebug($"Add product {product.Name} to order");
+        _orderService.AddProduct(product);
+        RefreshOrder();
     }
    
     private void RemoveProductFromOrder(ProductDto product)
     {
-        var currentOrderItem = CurrentOrder.FirstOrDefault(orderItem => orderItem.Product.Id == product.Id);
+        var currentOrderItem = CurrentOrder.FirstOrDefault(orderItem => orderItem.Id == product.Id);
         if (currentOrderItem != null)
         {
             _logger.LogDebug($"Remove all ${product.Name}");
-            CurrentOrder.Remove(currentOrderItem);
+            _orderService.RemoveProduct(currentOrderItem);
+            RefreshOrder();
         }
-        UpdateTotalPrice();
     }
 
     private void ClearCurrentOrder()
     {
-        CurrentOrder.Clear();
-        UpdateTotalPrice();
+        _logger.LogDebug($"Clear current order");
+        _orderService.ClearOrder();
+        RefreshOrder();
     }
     private void UpdateTotalPrice()
     {
-        OrderPrice = CurrentOrder.Sum(orderItem => orderItem.TotalPrice);
+        OrderPrice = _orderService.GetTotalPrice();
+    }
+
+    private void RefreshOrder()
+    {
+        CurrentOrder.Clear();
+        foreach (var item in _orderService.GetCurrentOrder())
+        {
+            CurrentOrder.Add(item);
+        }
+        UpdateTotalPrice();
     }
     private void OnProductUpdate()
     {
@@ -102,16 +101,22 @@ public class OrderViewModel: INotifyPropertyChanged
         OnPropertyChanged(nameof(AvailableProducts));
     }
 
-    public void OnStepperValueChanged(OrderItemDto orderItem, int quantity)
+    public void OnStepperValueChanged(OrderItemViewModel orderItem, int quantity)
     {
-        _logger.LogDebug($"Increase Quantity of {orderItem.Product.Name} to {quantity}");
+        _logger.LogDebug("OnStepperValueChanged Method called");
+        _logger.LogDebug($"Increase Quantity of {orderItem.Name} to {quantity}");
+        var existingItem = CurrentOrder.FirstOrDefault(item => item.Id == orderItem.Id);
+        if (existingItem == null) return;
         if (quantity == 0)
         {
-            CurrentOrder.Remove(orderItem);
+            _logger.LogDebug($"Remove {existingItem.Name} from the order");
+            _orderService.RemoveProduct(existingItem);
+            RefreshOrder();
         }
         else
         {
-            orderItem.Quantity = quantity;
+            _logger.LogDebug($"Update quantity of product {existingItem.Name}");
+            existingItem.Quantity = quantity;
         }
         UpdateTotalPrice();
     }

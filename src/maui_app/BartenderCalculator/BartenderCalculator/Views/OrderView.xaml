@@ -79,7 +79,7 @@
                </Grid>
            </ListView.Header>
            <ListView.ItemTemplate>
-               <DataTemplate x:DataType="dtos:OrderItemDto">
+               <DataTemplate x:DataType="vm:OrderItemViewModel">
                    <ViewCell>
                        <Grid Padding="10" 
                              ColumnSpacing="15">
@@ -91,12 +91,12 @@
                                <ColumnDefinition Width="*"/>
                            </Grid.ColumnDefinitions>
                            <Label Grid.Column="0" 
-                                  Text="{Binding Product.Name}"
+                                  Text="{Binding Name}"
                                   AutomationId="OrderView.CurrentOrder.ProductNameLabel"
                                   MinimumHeightRequest="48"
                                   HorizontalOptions="Center"/>
                            <Label Grid.Column="1" 
-                                  Text="{Binding Product.Price}"
+                                  Text="{Binding Price}"
                                   MinimumHeightRequest="48"
                                   HorizontalOptions="Center"/>
                            <Label Grid.Column="2" 
@@ -124,7 +124,7 @@
                                    HorizontalOptions="Center"
                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, 
                                    Path=BindingContext.RemoveProductFromOrderCommand}" 
-                                   CommandParameter="{Binding Product}"
+                                   CommandParameter="{Binding Product }"
                                    SemanticProperties.Description="{x:Static strings:AppResources.OrderView_DeleteButton_SemanticPropertiesDescription}"
                                    AutomationId="OrderView.CurrentOrder.RemoveFromOrderButton">
                                <Button.ImageSource>

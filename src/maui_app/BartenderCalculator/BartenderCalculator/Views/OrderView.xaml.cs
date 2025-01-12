@@ -1,5 +1,4 @@
-﻿using BartenderCalculator.Contracts.DTO;
-using BartenderCalculator.ViewModels;
+﻿using BartenderCalculator.ViewModels;
 using Microsoft.Extensions.Logging;
 
 namespace BartenderCalculator.Views;
@@ -16,15 +15,14 @@ public partial class OrderView
 
     private void OnStepperValueChanged(object sender, ValueChangedEventArgs args)
     {
-        if (sender is not Stepper stepper) return;
-        var orderItem = (OrderItemDto)stepper.BindingContext;
-        var viewModel = (OrderViewModel)BindingContext;
-        if (orderItem == null)
+        _logger.LogDebug($"Old value {args.OldValue} New value {args.NewValue}");
+        if (sender is Stepper { BindingContext: OrderItemViewModel orderItem } )
         {
-            // Further investigation needed, this method gets called 
-            _logger.LogDebug("OrderItem is null");
-            return;
+            var newQuantity = orderItem.Quantity;
+            if (BindingContext is OrderViewModel viewModel)
+            {
+                viewModel.OnStepperValueChanged(orderItem, newQuantity);
+            }
         }
-        viewModel.OnStepperValueChanged(orderItem, (int)args.NewValue);
     }
 }

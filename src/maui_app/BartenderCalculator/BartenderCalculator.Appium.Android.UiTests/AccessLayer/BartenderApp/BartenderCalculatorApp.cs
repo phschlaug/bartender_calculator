@@ -9,10 +9,10 @@ namespace BartenderCalculator.Appium.Android.UiTests.AccessLayer.BartenderApp;
 public class BartenderCalculatorApp
 {
     private const string OrderViewAutomationId = "OrderView";
-    private const string OrderViewXPath = "//android.widget.TextView[@text=\"CREATE ORDER\"]";
+    private const string OrderViewXPath = "//android.widget.LinearLayout[@content-desc=\"Order\"]"; 
     
     private const string ConfigurationViewAutomationId = "ConfigurationView";
-    private const string ConfigurationViewXPath = "//android.widget.TextView[@text=\"CONFIGURE PRODUCTS\"]";
+    private const string ConfigurationViewXPath = "//android.widget.LinearLayout[@content-desc=\"Configure Products\"]";
     
     private const string PackageName = "com.phisch.bartendercalculator";
     private const string MainActivityName = ".mainactivity";

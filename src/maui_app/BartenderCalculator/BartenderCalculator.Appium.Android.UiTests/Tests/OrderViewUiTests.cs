@@ -11,6 +11,7 @@ public class OrderViewTests: BaseUiTests
 
     private readonly ProductDto _beer = new ProductDto("Beer", 5);
     private readonly ProductDto _water = new ProductDto("Water", 2);
+    private readonly ProductDto _soda = new ProductDto("Soda", 1);
     
     [SetUp]
     public void SetUp()
@@ -19,6 +20,7 @@ public class OrderViewTests: BaseUiTests
         var configurationView = BartenderCalculatorApp.ConfigurationView;
         configurationView.AddProduct(_beer);
         configurationView.AddProduct(_water);
+        configurationView.AddProduct(_soda);
         _sut = BartenderCalculatorApp.OpenOrderView();
     }
     
@@ -94,6 +96,27 @@ public class OrderViewTests: BaseUiTests
         totalPrice = _sut.GetTotalPrice();
         
         totalPrice.Should().Be(0);
+    }
+
+    [Test]
+    public void
+        RemoveProductFromOrder_AddingThreeProductsToOrderRemovingFirstProductViaStepper_ShouldOnlyRemoveFirstProduct()
+    {
+        _sut.OrderProductWith(name: _beer.Name);
+        _sut.OrderProductWith(name: _water.Name);
+        _sut.OrderProductWith(name: _soda.Name);
+
+        var actualPrice = _sut.GetTotalPrice();
+        var expectedPrice = _beer.Price + _water.Price + _soda.Price;
+        actualPrice.Should().Be(expectedPrice);
+        
+        _sut.DecreaseProductQuantity(_beer);
+        
+        var updatedPrice = _sut.GetTotalPrice();
+        var expectedUpdatedPrice = _water.Price + _soda.Price;
+        
+        updatedPrice.Should().Be(expectedUpdatedPrice);
+        
     }
 
     [TearDown]
