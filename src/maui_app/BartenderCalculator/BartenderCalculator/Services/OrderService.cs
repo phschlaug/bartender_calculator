@@ -1,4 +1,3 @@
-using BartenderCalculator.Contracts.DTO;
 using BartenderCalculator.Interface;
 using BartenderCalculator.ViewModels;
 
@@ -6,14 +5,14 @@ namespace BartenderCalculator.Services;
 
 public class OrderService: IOrderService
 {
-    private readonly List<OrderItemViewModel> _currentOrder = new();
+    private List<OrderItemViewModel> _currentOrder = new();
     
     public IEnumerable<OrderItemViewModel> GetCurrentOrder()
     {
         return _currentOrder;
     }
 
-    public void AddProduct(ProductDto product)
+    public void AddProduct(ProductViewModel product)
     {
         var existing = _currentOrder.FirstOrDefault(item => item.Product.Id == product.Id);
         if (existing != null)
@@ -57,5 +56,19 @@ public class OrderService: IOrderService
     public decimal GetTotalPrice()
     {
         return _currentOrder.Sum(item => item.TotalPrice);
+    }
+
+    public void DatabaseUpdated(IList<ProductViewModel> products)
+    {
+        foreach (var currentOrderProduct in _currentOrder)
+        {
+            foreach (var product in products)
+            {
+                if (currentOrderProduct.Product.Id != product.Id) continue;
+                currentOrderProduct.Product.Name = product.Name;
+                currentOrderProduct.Product.Price = product.Price;
+            }
+        }
+        _currentOrder = _currentOrder.Where(item => products.Any(product => product.Id == item.Id)).ToList();
     }
 }

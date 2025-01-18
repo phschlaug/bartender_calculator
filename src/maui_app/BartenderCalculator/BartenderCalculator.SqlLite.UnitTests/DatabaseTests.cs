@@ -9,6 +9,11 @@ public class DatabaseTests
 {
     private Database _sut;
 
+    private readonly ProductDto _beer = new("Beer", 8)
+    {
+        Id = 1
+    };
+
     [SetUp]
     public void Setup()
     {
@@ -18,23 +23,20 @@ public class DatabaseTests
     [Test]
     public void Insert_StoringValidProduct_ShouldStoreProductToDatabase()
     {
-        var productDto = new ProductDto{ Id = 1, Name="Beer", Price=8};
-        
-        _sut.Insert(productDto);
+        _sut.Insert(_beer);
 
         var products = _sut.GetProducts();
         
         products.Count.Should().Be(1);
-        products[0].Name.Should().Be(productDto.Name);
-        products[0].Price.Should().Be(productDto.Price);
+        products[0].Name.Should().Be(_beer.Name);
+        products[0].Price.Should().Be(_beer.Price);
     }
 
     [Test]
     public void Insert_TryToInsertSameProductTwice_ShouldOnlyAddItOnce()
     {
-        var productDto = new ProductDto{ Id = 1, Name="Beer", Price=8};
-        _sut.Insert(productDto);
-        _sut.Insert(productDto);
+        _sut.Insert(_beer);
+        _sut.Insert(_beer);
         
         var products = _sut.GetProducts();
         products.Count.Should().Be(1);
@@ -43,11 +45,14 @@ public class DatabaseTests
     [Test]
     public void Update_UpdatingExistingProduct_ShouldSimplyUpdateExistingProduct()
     {
-        var productDto = new ProductDto{ Id = 1, Name="Beer", Price=8};
+        var productDto = new ProductDto("Soda", 8)
+        {
+            Id = 1
+        };
         _sut.Insert(productDto);
         var products = _sut.GetProducts();
         products.Count.Should().Be(1);
-        products[0].Name.Should().Be("Beer");
+        products[0].Name.Should().Be("Soda");
 
         productDto.Name = "Water";
         
@@ -60,9 +65,7 @@ public class DatabaseTests
     [Test]
     public void Update_TryToUpdateNoneExistingProduct_ShouldNotThrowException()
     {
-        var productDto = new ProductDto{ Id = 1, Name="Beer", Price=8};
-        
-        var updateAction = () => _sut.Update(productDto);
+        var updateAction = () => _sut.Update(_beer);
         
         updateAction.Should().NotThrow();
         var products = _sut.GetProducts();
@@ -72,12 +75,11 @@ public class DatabaseTests
     [Test]
     public void Delete_AddingAnDummyProductAndDeleteIt_ShouldDeleteProduct()
     {
-        var productDto = new ProductDto{ Id = 1, Name="Beer", Price=8};
-        _sut.Insert(productDto);
+        _sut.Insert(_beer);
         var products = _sut.GetProducts();
         products.Count.Should().Be(1);
         
-        _sut.Delete(productDto);
+        _sut.Delete(_beer);
         
         products = _sut.GetProducts();
         products.Count.Should().Be(0);
@@ -86,9 +88,7 @@ public class DatabaseTests
     [Test]
     public void Delete_TryToDeleteAnNotExistingProduct_ShouldNotThrowException()
     {
-        var productDto = new ProductDto{ Id = 1, Name="Beer", Price=8};
-        
-        var deleteAction = () => _sut.Delete(productDto);
+        var deleteAction = () => _sut.Delete(_beer);
 
         deleteAction.Should().NotThrow();
     }
@@ -96,24 +96,28 @@ public class DatabaseTests
     [Test]
     public void ContainsProduct_CheckingEmptyDatabase_ShouldReturnFalse()
     {
-        var notExistingProductDto = new ProductDto{ Id = 1, Name="Beer", Price=8};
-        _sut.ContainsProduct(notExistingProductDto).Should().BeFalse();
+        _sut.ContainsProduct(_beer).Should().BeFalse();
     }
 
     [Test]
     public void ContainsProduct_DatabaseContainsProduct_ShouldReturnTrue()
     {
-        var productDto = new ProductDto{ Id = 1, Name="Beer", Price=8};
-        _sut.Insert(productDto);
+        _sut.Insert(_beer);
         
-        _sut.ContainsProduct(productDto).Should().BeTrue();
+        _sut.ContainsProduct(_beer).Should().BeTrue();
     }
 
     [Test]
     public void ContainsProduct_DatabaseContainsProductCheckingForProductSameNameDifferentId_ShouldReturnTrue()
     {
-        var productDto = new ProductDto{ Id = 1, Name="Beer", Price=8};
-        var secondProductDto = new ProductDto{ Id = 2, Name="Beer", Price=8};
+        var productDto = new ProductDto("Beer", 8)
+        {
+            Id = 1
+        };
+        var secondProductDto = new ProductDto("Beer", 8)
+        {
+            Id = 2
+        };
         
         _sut.Insert(productDto);
         

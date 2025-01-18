@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:strings="clr-namespace:BartenderCalculator.Resources.Strings"
              xmlns:vm="clr-namespace:BartenderCalculator.ViewModels"
-             xmlns:dtos="clr-namespace:BartenderCalculator.Contracts.DTO;assembly=BartenderCalculator.Contracts"
              xmlns:icons="clr-namespace:BartenderCalculator.Resources.Fonts"
              x:Class="BartenderCalculator.Views.ConfigurationView"
              x:DataType="vm:ConfigurationViewModel"
@@ -41,16 +40,18 @@
                     </Grid.ColumnDefinitions>
                     <Label 
                         Text="{x:Static strings:AppResources.ConfigurationView_Table_NameHeadline}" 
-                        FontSize="18" 
+                        FontSize="18"
+                        MinimumHeightRequest="48"
                         FontAttributes="Bold"/>
                     <Label Grid.Column="1" 
                            Text="{x:Static strings:AppResources.ConfigurationView_Table_PriceHeadline}" 
                            FontSize="18" 
+                           MinimumHeightRequest="48"
                            FontAttributes="Bold"/>
                 </Grid>
             </ListView.Header>
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="dtos:ProductDto">
+                <DataTemplate x:DataType="vm:ProductViewModel">
                     <ViewCell>
                         <Grid Padding="10" ColumnSpacing="15">
                             <Grid.ColumnDefinitions>
@@ -86,7 +87,8 @@
                                     Path=BindingContext.EditProductCommand}"
                                     CommandParameter="{Binding .}"
                                     SemanticProperties.Description="{x:Static strings:AppResources.ConfigurationView_EditButton_SemanticProperties_Description}"
-                                    AutomationId="ConfigurationView.ProductListView.EditProductButton">
+                                    AutomationId="ConfigurationView.ProductListView.EditProductButton"
+                                    IsEnabled="{Binding IsModified}">
                                 <Button.ImageSource>
                                     <FontImageSource Glyph="{x:Static icons:MaterialIconHelper.SaveIcon}"
                                                      FontFamily="MaterialIcons"

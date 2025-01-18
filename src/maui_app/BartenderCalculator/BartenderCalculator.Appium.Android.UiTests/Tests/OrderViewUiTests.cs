@@ -9,9 +9,9 @@ public class OrderViewTests: BaseUiTests
 {
     private OrderView _sut;
 
-    private readonly ProductDto _beer = new ProductDto("Beer", 5);
-    private readonly ProductDto _water = new ProductDto("Water", 2);
-    private readonly ProductDto _soda = new ProductDto("Soda", 1);
+    private readonly ProductDto _beer = new ("Beer", 5);
+    private readonly ProductDto _water = new ("Water", 2);
+    private readonly ProductDto _soda = new ("Soda", 1);
     
     [SetUp]
     public void SetUp()

@@ -51,6 +51,17 @@ public class ConfigurationViewUiTests: BaseUiTests
     }
 
     [Test]
+    public void EditProduct_TryToRemoveNameOfProductAndSaveIt_ShouldDisplayAlertView()
+    {
+        _sut.AddProduct("Dummy Product", 2.5);
+        _sut.ChangeNameOfProductWithName("Dummy Product", string.Empty);
+        // _sut.ChangeNameOfProductAt(0, string.Empty);
+        var alertView = BartenderCalculatorApp.GetAlertView();
+        alertView.IsVisible().Should().BeTrue();
+        alertView.CloseAlertView();
+    }
+
+    [Test]
     public void DeleteProduct_AddingTwoProductsThenRemovingBoth_ExpectEmptyProductList()
     {
         _sut.AddProduct("Foo", 2.5);
@@ -91,17 +102,18 @@ public class ConfigurationViewUiTests: BaseUiTests
         var alertView = BartenderCalculatorApp.GetAlertView();
         alertView.IsVisible().Should().BeTrue();
         alertView.CloseAlertView();
-        alertView.IsVisible().Should().BeFalse();
+        var actualAmountOfProducts = _sut.GetAmountOfProducts();
+        actualAmountOfProducts.Should().Be(0);
     }
 
     [Test]
     public void AddProduct_TryToAddProductWithEmptyNameButHavingPrice_ShouldNotAddProduct()
     {
         _sut.AddProduct(string.Empty, 5);
-        var actualAmountOfProducts = _sut.GetAmountOfProducts();
         var alertView = BartenderCalculatorApp.GetAlertView();
         alertView.IsVisible().Should().BeTrue();
         alertView.CloseAlertView();
+        var actualAmountOfProducts = _sut.GetAmountOfProducts();
         actualAmountOfProducts.Should().Be(0);
     }
 

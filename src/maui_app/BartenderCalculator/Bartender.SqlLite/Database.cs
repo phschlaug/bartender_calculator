@@ -24,7 +24,6 @@ public class Database: IDatabase
         {
             _database.Insert(productEntityToInsert);
         }
-        ProductsUpdated?.Invoke();
     }
 
     public void Update(ProductDto product)
@@ -34,7 +33,6 @@ public class Database: IDatabase
         productInDatabase.Name = product.Name;
         productInDatabase.Price = product.Price;
         _database.Update(productInDatabase);
-        ProductsUpdated?.Invoke();
     }
 
     public List<ProductDto> GetProducts()
@@ -43,13 +41,11 @@ public class Database: IDatabase
         return products.Select(product => product.ToProductDto()).ToList();
     }
 
-    public event Action? ProductsUpdated;
 
     public void Delete(ProductDto product)
     {
         var productTableEntity = product.ToProduct();
         _database.Delete(productTableEntity);
-        ProductsUpdated?.Invoke();
     }
 
     public bool ContainsProduct(ProductDto product)

@@ -2,8 +2,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using BartenderCalculator.Contracts;
-using BartenderCalculator.Contracts.DTO;
 using BartenderCalculator.Interface;
 using Microsoft.Extensions.Logging;
 
@@ -11,7 +9,7 @@ namespace BartenderCalculator.ViewModels;
 
 public class OrderViewModel: INotifyPropertyChanged
 {
-    public ObservableCollection<ProductDto> AvailableProducts { get; set; }
+    public ObservableCollection<ProductViewModel> AvailableProducts { get; set; }
     public ObservableCollection<OrderItemViewModel> CurrentOrder { get; set; }
     
     public ICommand AddProductToOrderCommand { get; set; }
@@ -19,20 +17,20 @@ public class OrderViewModel: INotifyPropertyChanged
     
     public ICommand ClearOrderCommand { get; set; }
     private decimal _orderPrice;
-    private readonly IDatabase _database;
     private readonly ILogger<OrderViewModel> _logger;
     private readonly IOrderService _orderService;
+    private readonly IProductService _productService;
 
-    public OrderViewModel(IDatabase database, ILogger<OrderViewModel> logger, IOrderService orderService)
+    public OrderViewModel(IProductService productService, ILogger<OrderViewModel> logger, IOrderService orderService)
     {
         _logger = logger;
-        _database = database;
-        var availableProducts = _database.GetProducts();
-        _database.ProductsUpdated += OnProductUpdate;
-        AvailableProducts = new ObservableCollection<ProductDto>(availableProducts);
+        _productService = productService;
+        var availableProducts = _productService.GetAllProducts();
+        _productService.ProductsUpdated += OnProductUpdate;
+        AvailableProducts = new ObservableCollection<ProductViewModel>(availableProducts);
         CurrentOrder = [];
-        AddProductToOrderCommand = new Command<ProductDto>(AddProductToOrder);
-        RemoveProductFromOrderCommand = new Command<ProductDto>(RemoveProductFromOrder);
+        AddProductToOrderCommand = new Command<ProductViewModel>(AddProductToOrder);
+        RemoveProductFromOrderCommand = new Command<ProductViewModel>(RemoveProductFromOrder);
         ClearOrderCommand = new Command(ClearCurrentOrder);
         _orderService = orderService;
         OrderPrice = 0;
@@ -56,14 +54,13 @@ public class OrderViewModel: INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    private void AddProductToOrder(ProductDto product)
+    private void AddProductToOrder(ProductViewModel product)
     {
-        _logger.LogDebug($"Add product {product.Name} to order");
         _orderService.AddProduct(product);
         RefreshOrder();
     }
    
-    private void RemoveProductFromOrder(ProductDto product)
+    private void RemoveProductFromOrder(ProductViewModel product)
     {
         var currentOrderItem = CurrentOrder.FirstOrDefault(orderItem => orderItem.Id == product.Id);
         if (currentOrderItem != null)
@@ -76,7 +73,6 @@ public class OrderViewModel: INotifyPropertyChanged
 
     private void ClearCurrentOrder()
     {
-        _logger.LogDebug($"Clear current order");
         _orderService.ClearOrder();
         RefreshOrder();
     }
@@ -96,8 +92,10 @@ public class OrderViewModel: INotifyPropertyChanged
     }
     private void OnProductUpdate()
     {
-        var availableProducts = _database.GetProducts();
-        AvailableProducts = new ObservableCollection<ProductDto>(availableProducts);
+        var availableProducts = _productService.GetAllProducts();
+        AvailableProducts = new ObservableCollection<ProductViewModel>(availableProducts);
+        _orderService.DatabaseUpdated(AvailableProducts);
+        RefreshOrder();
         OnPropertyChanged(nameof(AvailableProducts));
     }
 
@@ -120,5 +118,4 @@ public class OrderViewModel: INotifyPropertyChanged
         }
         UpdateTotalPrice();
     }
-
 }

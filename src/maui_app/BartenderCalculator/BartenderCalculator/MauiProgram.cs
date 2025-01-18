@@ -30,6 +30,7 @@ public static class MauiProgram
         
         //Register services
         builder.Services.AddSingleton<IOrderService, OrderService>();
+        builder.Services.AddSingleton<IProductService, ProductService>();
         
         // Register ViewModel
         builder.Services.AddTransient<ConfigurationViewModel>();

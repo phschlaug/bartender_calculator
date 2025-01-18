@@ -9,7 +9,7 @@ public class OrderItemDtoUnitTests
     [Test]
     public void TotalPrice_AddingTwoProductsWithPriceOfFive_ShouldHaveTotalPriceOfTen()
     {
-        var productDto = new ProductDto{Name = "Dummy Product", Price = 5};
+        var productDto = new ProductDto( "Dummy Product",  5);
         var orderItemDto = new OrderItemDto(productDto, 2);
         
         var actualTotalPrice = orderItemDto.TotalPrice;

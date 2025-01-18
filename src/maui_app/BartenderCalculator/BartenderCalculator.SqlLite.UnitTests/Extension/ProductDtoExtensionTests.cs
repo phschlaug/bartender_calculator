@@ -10,11 +10,9 @@ public class ProductDtoExtensionTests
     [Test]
     public void ToProduct_UsingASimpleProductDto_ShouldMapAllRelevantProperties()
     {
-        var productDto = new ProductDto
+        var productDto = new ProductDto("Test Product", 50)
         {
             Id = 1,
-            Name = "Test Product",
-            Price = 50
         };
 
         var actualProduct = productDto.ToProduct();

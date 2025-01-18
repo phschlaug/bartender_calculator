@@ -10,6 +10,4 @@ public interface IDatabase
     void Delete(ProductDto product);
     bool ContainsProduct(ProductDto product);
     List<ProductDto> GetProducts();
-    
-    event Action ProductsUpdated;
 }

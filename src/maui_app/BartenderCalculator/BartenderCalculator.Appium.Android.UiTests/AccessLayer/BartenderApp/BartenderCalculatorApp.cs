@@ -8,14 +8,14 @@ namespace BartenderCalculator.Appium.Android.UiTests.AccessLayer.BartenderApp;
 
 public class BartenderCalculatorApp
 {
-    private const string OrderViewAutomationId = "OrderView";
-    private const string OrderViewXPath = "//android.widget.LinearLayout[@content-desc=\"Order\"]"; 
+    // private const string OrderViewAutomationId = "OrderView";
+    private const string orderViewXPath = "//android.widget.LinearLayout[@content-desc=\"Order\"]"; 
     
-    private const string ConfigurationViewAutomationId = "ConfigurationView";
-    private const string ConfigurationViewXPath = "//android.widget.LinearLayout[@content-desc=\"Configure Products\"]";
+    // private const string ConfigurationViewAutomationId = "ConfigurationView";
+    private const string configurationViewXPath = "//android.widget.LinearLayout[@content-desc=\"Configure Products\"]";
     
-    private const string PackageName = "com.phisch.bartendercalculator";
-    private const string MainActivityName = ".mainactivity";
+    private const string packageName = "com.phisch.bartendercalculator";
+    private const string mainActivityName = ".mainactivity";
     public ConfigurationView ConfigurationView { get; set; }
     private OrderView OrderView { get; set; }
     
@@ -28,8 +28,8 @@ public class BartenderCalculatorApp
             PlatformName = "Android",
             DeviceName = "Android Emulator",
         };
-        driverOptions.AddAdditionalAppiumOption("appPackage", PackageName);
-        driverOptions.AddAdditionalAppiumOption("appActivity", MainActivityName);
+        driverOptions.AddAdditionalAppiumOption("appPackage", packageName);
+        driverOptions.AddAdditionalAppiumOption("appActivity", mainActivityName);
         driverOptions.AddAdditionalAppiumOption("uiautomator2ServerLaunchTimeout",6000 );
         driverOptions.AddAdditionalAppiumOption("noReset", true);
 
@@ -39,7 +39,7 @@ public class BartenderCalculatorApp
 
     public void Start()
     {
-        _driver.StartActivity(PackageName, MainActivityName);
+        _driver.StartActivity(packageName, mainActivityName);
         ConfigurationView = new ConfigurationView(_driver);
         OrderView = new OrderView(_driver);
     }
@@ -52,14 +52,14 @@ public class BartenderCalculatorApp
 
     public ConfigurationView OpenConfigurationView()
     {
-        var configurationView = _driver.FindElement(By.XPath(ConfigurationViewXPath));
+        var configurationView = _driver.FindElement(By.XPath(configurationViewXPath));
         configurationView.Click();
         return ConfigurationView;
     }
 
     public OrderView OpenOrderView()
     {
-        var orderView = _driver.FindElement(By.XPath(OrderViewXPath));
+        var orderView = _driver.FindElement(By.XPath(orderViewXPath));
         orderView.Click();
         return OrderView;
     }

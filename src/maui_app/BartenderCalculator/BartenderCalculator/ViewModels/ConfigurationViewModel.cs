@@ -3,8 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using BartenderCalculator.Alert;
-using BartenderCalculator.Contracts;
-using BartenderCalculator.Contracts.DTO;
+using BartenderCalculator.Interface;
 using BartenderCalculator.Resources.Strings;
 using Microsoft.Extensions.Logging;
 
@@ -12,29 +11,29 @@ namespace BartenderCalculator.ViewModels;
 
 public class ConfigurationViewModel: INotifyPropertyChanged
 {
-    public ObservableCollection<ProductDto> Products { get; set; }
+    public ObservableCollection<ProductViewModel> Products { get; set; }
     private string _productName;
     private decimal _productPrice;
     
     public ICommand AddProductCommand { get; set; }
     public ICommand DeleteProductCommand { get; set; }
     public ICommand EditProductCommand { get; set; }
-    private readonly IDatabase _database;
+    private readonly IProductService _productService;
     private readonly ILogger<ConfigurationViewModel> _logger;
     private readonly IMessenger _messenger;
 
-    public ConfigurationViewModel(IDatabase database, ILogger<ConfigurationViewModel> logger, IMessenger messenger)
+    public ConfigurationViewModel(IProductService productService, ILogger<ConfigurationViewModel> logger, IMessenger messenger)
     {
-        _database = database;
+        _productService = productService;
         _logger = logger;
+        
         _messenger = messenger;
-        _database.ProductsUpdated += OnProductUpdate;
-        DeleteProductCommand = new Command<ProductDto>(DeleteProduct);
+        DeleteProductCommand = new Command<ProductViewModel>(DeleteProduct);
         AddProductCommand = new Command(AddProduct);
-        EditProductCommand = new Command<ProductDto>(EditProduct);
+        EditProductCommand = new Command<ProductViewModel>(EditProduct);
         _productName = string.Empty;
-        var savedProducts = _database.GetProducts();
-        Products = new ObservableCollection<ProductDto>(savedProducts);
+        var savedProducts = _productService.GetAllProducts(); 
+        Products = new ObservableCollection<ProductViewModel>(savedProducts);
     }
 
     public string ProductName
@@ -64,10 +63,9 @@ public class ConfigurationViewModel: INotifyPropertyChanged
             if(ValidProductPrice(ProductPrice))
             {
                 //Valid input
-                var productToAdd = new ProductDto { Name = ProductName, Price = ProductPrice };
-                if (_database.ContainsProduct(productToAdd))
+                var productToAdd = new ProductViewModel(ProductName, ProductPrice);
+                if(Products.Any(p => p.Name == productToAdd.Name))
                 {
-                    // Error
                     _messenger.SendAsync(AppResources.Alert_WarningHeadline, 
                         AppResources.Alert_ProductSameNameExistsText, 
                         AppResources.Alert_OkButton);
@@ -75,38 +73,65 @@ public class ConfigurationViewModel: INotifyPropertyChanged
                 else
                 {
                     Products.Add(productToAdd);
-                    _database.Insert(productToAdd);
+                    _productService.SaveProduct(productToAdd);
                     ProductName = string.Empty;
-                    ProductPrice = 0; 
+                    ProductPrice = 0;
+                    RefreshProductList();
                 }
             }
             else
             {
-                _logger.LogDebug("Valid product name, but price is invalid");
-                _messenger.SendAsync(AppResources.Alert_InvalidProductPriceHeadline, 
-                    AppResources.Alert_InvalidProductPrice_Text,
-                    AppResources.Alert_OkButton);
+                DisplayInvalidPriceWithValidNameAlert();
             }
         }
         else
         {
-            _logger.LogDebug("Product name is invalid");
-            _messenger.SendAsync(AppResources.Alert_InvalidProductNameHeadline,
-                AppResources.Alert_InvalidProductNameText,
-                AppResources.Alert_OkButton);
+            DisplayInvalidProductNameAlert();
         }
     }
 
-    private void EditProduct(ProductDto product)
+    private void DisplayInvalidPriceWithValidNameAlert()
     {
-        _database.Update(product);
+        _logger.LogDebug("Valid product name, but price is invalid");
+        _messenger.SendAsync(AppResources.Alert_InvalidProductPriceHeadline, 
+            AppResources.Alert_InvalidProductPrice_Text,
+            AppResources.Alert_OkButton);
     }
 
-    private void DeleteProduct(ProductDto product)
+    private void DisplayInvalidProductNameAlert()
+    {
+        _logger.LogDebug("Product name is invalid");
+        _messenger.SendAsync(AppResources.Alert_InvalidProductNameHeadline,
+            AppResources.Alert_InvalidProductNameText,
+            AppResources.Alert_OkButton);
+    }
+
+    private void EditProduct(ProductViewModel product)
+    {
+        if (!ValidProductName(product.Name))
+        {
+            DisplayInvalidProductNameAlert();
+            RefreshProductList();
+            return;
+        }
+
+        if (!ValidProductPrice(product.Price))
+        {
+            DisplayInvalidPriceWithValidNameAlert();
+            RefreshProductList();
+            return;
+        }
+        _productService.UpdateProduct(product);
+        product.IsModified = false;
+        RefreshProductList();
+    }
+
+    private void DeleteProduct(ProductViewModel product)
     {
         if (!Products.Contains(product)) return;
         Products.Remove(product);
-        _database.Delete(product);
+        _productService.DeleteProduct(product);
+        RefreshProductList();
     }
 
     private void SetProperty<T>(ref T backingField, T value, [CallerMemberName] string? propertyName = null)
@@ -114,13 +139,6 @@ public class ConfigurationViewModel: INotifyPropertyChanged
         if (Equals(backingField, value)) return;
         backingField = value;
         OnPropertyChanged(propertyName);
-    }
-
-    private void OnProductUpdate()
-    {
-        var products = _database.GetProducts();
-        Products = new ObservableCollection<ProductDto>(products);
-        OnPropertyChanged(nameof(Products));
     }
     
     private bool ValidProductName(string productName)
@@ -131,5 +149,14 @@ public class ConfigurationViewModel: INotifyPropertyChanged
     private bool ValidProductPrice(decimal productPrice)
     {
         return productPrice != 0;
+    }
+
+    private void RefreshProductList()
+    {
+        Products.Clear();
+        foreach (var product in _productService.GetAllProducts())
+        {
+            Products.Add(product);
+        }
     }
 }

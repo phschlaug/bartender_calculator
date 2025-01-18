@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:strings="clr-namespace:BartenderCalculator.Resources.Strings"
              xmlns:vm="clr-namespace:BartenderCalculator.ViewModels"
-             xmlns:dtos="clr-namespace:BartenderCalculator.Contracts.DTO;assembly=BartenderCalculator.Contracts"
              xmlns:icons="clr-namespace:BartenderCalculator.Resources.Fonts"
              x:Class="BartenderCalculator.Views.OrderView"
              x:DataType="vm:OrderViewModel"
@@ -19,7 +18,7 @@
                <GridItemsLayout Orientation="Vertical" Span="5"/>
            </CollectionView.ItemsLayout>
            <CollectionView.ItemTemplate>
-               <DataTemplate x:DataType="dtos:ProductDto">
+               <DataTemplate x:DataType="vm:ProductViewModel">
                    <Button Text="{Binding Name}"
                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
                            Path = BindingContext.AddProductToOrderCommand}"

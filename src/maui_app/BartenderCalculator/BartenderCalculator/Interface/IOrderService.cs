@@ -6,9 +6,11 @@ namespace BartenderCalculator.Interface;
 public interface IOrderService
 {
     IEnumerable<OrderItemViewModel> GetCurrentOrder();
-    void AddProduct(ProductDto product);
+    void AddProduct(ProductViewModel product);
     void RemoveProduct(OrderItemViewModel orderItem);
     void UpdateQuantity(OrderItemViewModel orderItem, int quantity);
     void ClearOrder();
     decimal GetTotalPrice();
+    
+    void DatabaseUpdated(IList<ProductViewModel> products);
 }

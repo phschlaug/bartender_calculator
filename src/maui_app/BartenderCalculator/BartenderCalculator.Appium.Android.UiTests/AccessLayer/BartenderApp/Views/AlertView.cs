@@ -5,7 +5,7 @@ namespace BartenderCalculator.Appium.Android.UiTests.AccessLayer.BartenderApp.Vi
 
 internal class AlertViewPath
 {
-    public readonly string Title = "alertTitle";
+    public readonly string TitleXPath = "//android.widget.TextView[@resource-id=\"com.phisch.bartendercalculator:id/alertTitle\"]";
     public readonly string Message = "android:id/message";
     public readonly string Button = "android:id/button2";
 }
@@ -29,7 +29,7 @@ public class AlertView: IView
 
     public string GetTitle()
     {
-        var titleText = _driver.FindElement(By.Id(_path.Title));
+        var titleText = _driver.FindElement(By.XPath(_path.TitleXPath));
         return titleText.Text;
     }
 
@@ -41,7 +41,7 @@ public class AlertView: IView
     
     public bool IsVisible()
     {
-        var title = _driver.FindElement(By.Id(_path.Title));
+        var title = _driver.FindElement(By.XPath(_path.TitleXPath));
         return title.Displayed;
     }
 }
