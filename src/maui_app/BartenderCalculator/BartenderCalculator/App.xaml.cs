@@ -18,8 +18,7 @@ public partial class App : Application
     {
         Page mainPage = DeviceInfo.Platform.ToString() switch
         {
-            "Android" or "iOS" => new MobileMainView(_configurationView, _orderView),
-            "MacCatalyst" or "WinUi" => new DesktopMainView(_configurationView, _orderView),
+            "Android"  => new MobileMainView(_configurationView, _orderView),
             _ => new ContentPage { Content = new Label { Text = "Platform not supported" }} 
         };
         return new Window(mainPage);

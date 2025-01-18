@@ -14,6 +14,7 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
+#pragma warning disable CA1416 The Minimum Andriod SDK for this App is 21
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
@@ -42,7 +43,6 @@ public static class MauiProgram
         builder.Services.AddSingleton<IMessenger, MauiMessenger>();
         
         // Main Views
-        builder.Services.AddSingleton<DesktopMainView>();
         builder.Services.AddSingleton<MobileMainView>();
         builder.Services.AddBartenderLogging();
 
