@@ -1,10 +1,9 @@
-using BartenderCalculator.Appium.Android.UiTests.AccessLayer.BartenderApp.Views;
 using BartenderCalculator.Appium.Android.UiTests.AccessLayer.DTO;
 using FluentAssertions;
 
 namespace BartenderCalculator.Appium.Android.UiTests.Tests;
 /// <summary>
-/// This class contains more 
+/// This class contains test which covers more elaborate Workflows of the App 
 /// </summary>
 [TestFixture]
 public class WorkflowUiTests: BaseUiTests
@@ -26,19 +25,31 @@ public class WorkflowUiTests: BaseUiTests
     [Test]
     public void CreateOrderWithOneProductDeletingThisProduct_ShouldClearTheOrder()
     {
+        TestReport.CreateNewTest("Create Order", 
+            "Create an order and then delete product which is part of the order");
         var orderView = BartenderCalculatorApp.OpenOrderView();
+        TestReport.LogInfo($"Adding {_beer} to the current order");
         orderView.OrderProductWith("Beer");
         orderView.GetTotalPrice().Should().Be(_beer.Price);
+        TestReport.Pass("Beer was successfully added to current order");
+        TestReport.LogInfo("Switch to configuration view");
         var configurationView = BartenderCalculatorApp.OpenConfigurationView();
         configurationView.IsVisible().Should().BeTrue();
-        configurationView.DeleteProduct("Beer");
+        TestReport.Pass("Configuration View is visible");
+        TestReport.LogInfo($"Remove {_beer} from the database");
+        configurationView.DeleteProduct(_beer.Name);
         configurationView.GetAmountOfProducts().Should().Be(2);
+        TestReport.Pass("Only two products are available");
+        AttachScreenshot("OnlyTwoProductsStored");
+
+        TestReport.LogInfo("Switching back to Order View");
         orderView = BartenderCalculatorApp.OpenOrderView();
         orderView.GetTotalPrice().Should().Be(0);
+        TestReport.Pass($"Total price is 0 as expected");
+        AttachScreenshot("OrderIsEmpty");
     }
 
-    [TearDown]
-    public void TearDown()
+    protected override void TestSpecificTearDown()
     {
         var configView = BartenderCalculatorApp.OpenConfigurationView();
         configView.IsVisible().Should().BeTrue();

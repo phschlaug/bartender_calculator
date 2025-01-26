@@ -49,6 +49,8 @@ Besides installing Appium locally to be able to run the tests a driver is also n
 appium driver install uiautomator2
 ```
 
+Please be aware that the test might only run on an english UI.
+
 #### Good to Know
 
 With the help of the Appium Inspector it is possible to check the UI to do so first start the Appium server then start afterward start the Appium Inspector and check the configuration.

@@ -1,4 +1,5 @@
 using BartenderCalculator.Appium.Android.UiTests.AccessLayer.BartenderApp.Views;
+using BartenderCalculator.Appium.Android.UiTests.AccessLayer.DTO;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.Android;
@@ -46,8 +47,7 @@ public class BartenderCalculatorApp
 
     public void Stop()
     {
-        //ToDo: Check how to close app
-        _driver.Quit();
+        _driver.TerminateApp(packageName);
     }
 
     public ConfigurationView OpenConfigurationView()
@@ -69,4 +69,22 @@ public class BartenderCalculatorApp
         var alertView = new AlertView(_driver);
         return alertView;
     }
+
+    public string TakeScreenshot(string filename)
+    {
+        var screenshotPath = $"{filename}.png";
+        var screenshot = _driver.GetScreenshot();
+        screenshot.SaveAsFile(screenshotPath);
+        return screenshotPath;
+    }
+
+    public DeviceDto GetDeviceInfo()
+    {
+        var deviceName = _driver.Capabilities.GetCapability("deviceName");
+        var platformName = _driver.Capabilities.GetCapability("platformName");
+        var platformVersion = _driver.Capabilities.GetCapability("platformVersion");
+        return new(deviceName.ToString(), platformName.ToString(), platformVersion.ToString());
+
+    }
+    
 }

@@ -17,8 +17,10 @@ internal struct ConfigurationViewPath
     
     // ProductListView
     public string ProductListViewNameTextFieldAccessId => "ConfigurationView.ProductListView.NameTextField";
+    public string ProductListViewProductNameTextFieldXPath => "//android.widget.EditText[@resource-id=\"com.phisch.bartendercalculator:id/ConfigurationView.ProductListView.NameTextField\"]";
     public string ProductListViewPriceTextFieldAccessId => "ConfigurationView.ProductListView.PriceTextField";
-    public string ProductListViewEditButtonAccessId => "ConfigurationView.ProductListView.EditProductButton"; 
+    public string ProductListViewEditButtonAccessId => "ConfigurationView.ProductListView.EditProductButton";
+    public string ProductListViewEditButtonID => "com.phisch.bartendercalculator:id/ConfigurationView.ProductListView.EditProductButton";
     public string ProductListViewDeleteButtonAccessId => "ConfigurationView.ProductListView.DeleteButton";
 }
 public class ConfigurationView: IView
@@ -126,11 +128,11 @@ public class ConfigurationView: IView
 
     public string GetProductNameAt(int rowIndex)
     {
-        var rows = GetAllProductNameTextFieldsFromProdcutListView();
+        var rows = GetAllProductNameTextFieldsFromProductListView();
         if (rows is null) throw new ElementNotFoundException("ProductListViewRows");
         var productRow = rows[rowIndex];
         if (productRow is null) throw new ElementNotFoundException("ProductListViewRow");
-        var productName = productRow.FindElement(By.Id(_configurationViewPath.ProductListViewNameTextFieldAccessId));
+        var productName = productRow.FindElement(By.XPath(_configurationViewPath.ProductListViewProductNameTextFieldXPath));
         return productName.Text;
     }
 
@@ -146,9 +148,9 @@ public class ConfigurationView: IView
         return _driver.FindElements(By.Id(_configurationViewPath.ProductListViewDeleteButtonAccessId));
     }
 
-    private ReadOnlyCollection<AppiumElement> GetAllProductNameTextFieldsFromProdcutListView()
+    private ReadOnlyCollection<AppiumElement> GetAllProductNameTextFieldsFromProductListView()
     {
-        return _driver.FindElements(By.Id(_configurationViewPath.ProductListViewNameTextFieldAccessId));
+        return _driver.FindElements(By.XPath(_configurationViewPath.ProductListViewProductNameTextFieldXPath));
     }
 
     private int GetRowIndexOfProductWithName(string productName)
@@ -168,7 +170,7 @@ public class ConfigurationView: IView
 
     private AppiumElement GetProductRowAtIndex(int rowIndex)
     {
-        var rows = GetAllProductNameTextFieldsFromProdcutListView();
+        var rows = GetAllProductNameTextFieldsFromProductListView();
         var productRow = rows[rowIndex];
         if (productRow is null) throw new ElementNotFoundException("ProductListViewRow");
         return productRow;
@@ -176,12 +178,10 @@ public class ConfigurationView: IView
 
     private void EditNameOfProduct(AppiumElement productRow, string newName)
     {
-        var productNameTextFieldXPath =
-            "//android.widget.EditText[@resource-id=\"com.phisch.bartendercalculator:id/ConfigurationView.ProductListView.NameTextField\"]";
-        var productNameTextField = productRow.FindElement(By.XPath(productNameTextFieldXPath));
+        var productNameTextField = productRow.FindElement(By.XPath(_configurationViewPath.ProductListViewProductNameTextFieldXPath));
         productNameTextField.Clear();
         productNameTextField.SendKeys(newName);
-        var editButton = productRow.FindElement(By.Id(_configurationViewPath.ProductListViewEditButtonAccessId));
+        var editButton = _driver.FindElement(By.Id(_configurationViewPath.ProductListViewEditButtonID));
         if(editButton is null) throw new ElementNotFoundException("ProductListViewRow.EditButton");
         editButton.Click();
     }

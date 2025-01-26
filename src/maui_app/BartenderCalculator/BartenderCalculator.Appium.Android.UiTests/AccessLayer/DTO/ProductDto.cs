@@ -1,13 +1,12 @@
 namespace BartenderCalculator.Appium.Android.UiTests.AccessLayer.DTO;
 
-public class ProductDto
+public class ProductDto(string name, double price)
 {
-    public string Name { get; set; }
-    public double Price { get; set; }
+    public string Name { get; set; } = name;
+    public double Price { get; set; } = price;
 
-    public ProductDto(string name, double price)
+    public override string ToString()
     {
-        Name = name;
-        Price = price;
+        return $"Name: {Name}, Price: {Price}";
     }
 }
