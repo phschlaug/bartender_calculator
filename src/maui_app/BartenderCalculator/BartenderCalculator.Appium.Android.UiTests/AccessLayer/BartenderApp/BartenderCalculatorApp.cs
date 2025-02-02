@@ -31,7 +31,7 @@ public class BartenderCalculatorApp
         };
         driverOptions.AddAdditionalAppiumOption("appPackage", packageName);
         driverOptions.AddAdditionalAppiumOption("appActivity", mainActivityName);
-        driverOptions.AddAdditionalAppiumOption("uiautomator2ServerLaunchTimeout",6000 );
+        driverOptions.AddAdditionalAppiumOption("uiautomator2ServerLaunchTimeout",60000);
         driverOptions.AddAdditionalAppiumOption("noReset", true);
 
         _driver = new AndroidDriver(appiumServerUri, driverOptions, TimeSpan.FromSeconds(100));

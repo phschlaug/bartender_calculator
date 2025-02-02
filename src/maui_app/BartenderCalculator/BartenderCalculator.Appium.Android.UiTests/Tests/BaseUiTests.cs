@@ -39,7 +39,7 @@ public abstract class BaseUiTests
                 break;
             case TestStatus.Failed:
                 TestReport.Fail($"{testCaseName} failed: {message}");
-                AttachScreenshot($"{testCaseName}_failed");
+                AttachScreenshot($"{testCaseName}_failed", $"{testCaseName} Failed");
                 break;
             case TestStatus.Skipped:
                 TestReport.Skip("Skipped");
@@ -52,10 +52,11 @@ public abstract class BaseUiTests
         
     }
 
-    protected void AttachScreenshot(string screenshotName)
+    protected void AttachScreenshot(string screenshotName, string title)
     {
-        var screenshot = BartenderCalculatorApp.TakeScreenshot(screenshotName);
-        TestReport.AttachScreenshot(screenshot); 
+        var testReportPath = TestReport.GetTestReportFilePath();
+        var screenshot = BartenderCalculatorApp.TakeScreenshot($"{testReportPath}/{screenshotName}");
+        TestReport.AttachScreenshot(screenshot, title); 
     }
 
     [OneTimeTearDown]

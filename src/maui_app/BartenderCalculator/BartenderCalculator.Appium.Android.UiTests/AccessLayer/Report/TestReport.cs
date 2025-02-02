@@ -8,11 +8,12 @@ public class TestReport
 {
     private readonly ExtentReports _extentReports;
     private ExtentTest? _currentTest;
+    private string _testReportFolderPath;
     
     public TestReport(string testName)
     {
-        var testReportFilePath = PrepareTestReportFolder(testName);
-        var htmlReporter = new ExtentSparkReporter(testReportFilePath);
+        var htmlReportFilePath = PrepareTestReportFolder(testName);
+        var htmlReporter = new ExtentSparkReporter(htmlReportFilePath);
         _extentReports = new ExtentReports();
         _extentReports.AttachReporter(htmlReporter); 
     }
@@ -22,9 +23,10 @@ public class TestReport
         _currentTest = _extentReports.CreateTest(testName, description);
     }
 
-    public void AttachScreenshot(string screenshotPath)
+    public void AttachScreenshot(string screenshotPath, string title)
     {
-        _currentTest?.AddScreenCaptureFromPath(screenshotPath);
+        var media = MediaEntityBuilder.CreateScreenCaptureFromPath(screenshotPath, title).Build();
+        _currentTest?.Info(title, media);
     }
 
     public void LogInfo(string message)
@@ -59,15 +61,21 @@ public class TestReport
         _extentReports.Flush();
     }
 
+    public string GetTestReportFilePath()
+    {
+        return _testReportFolderPath;
+    }
+
     private string PrepareTestReportFolder(string testName)
     {
         string currentFolder = Directory.GetCurrentDirectory();
-        var rootFolderName = currentFolder.Substring(0, currentFolder.IndexOf("/maui_app/") + 1);
-        var pathToTestReports = Path.Combine(rootFolderName, "TestReports");
-        if (!Directory.Exists(pathToTestReports))
+        var mauiAppFolder = currentFolder.Substring(0, currentFolder.IndexOf("/maui_app/") + 1);
+        _testReportFolderPath = Path.Combine(mauiAppFolder, "TestReports");
+        
+        if (!Directory.Exists(_testReportFolderPath))
         {
-            Directory.CreateDirectory(pathToTestReports);
+            Directory.CreateDirectory(_testReportFolderPath);
         }
-        return Path.Combine(pathToTestReports, $"{testName}.html");
+        return Path.Combine(_testReportFolderPath, $"{testName}.html");
     }
 }

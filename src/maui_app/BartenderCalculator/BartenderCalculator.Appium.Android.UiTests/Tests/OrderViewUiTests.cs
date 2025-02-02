@@ -36,7 +36,7 @@ public class OrderViewTests: BaseUiTests
         var actualTotalPrice = _sut.GetTotalPrice();
         expectedTotalPrice.Should().Be(actualTotalPrice);
         TestReport.Pass($"The total price of the is {actualTotalPrice} as expected");
-        AttachScreenshot("AddOneProductToOrder");
+        AttachScreenshot("AddOneProductToOrder", "Verify one product was added to the order");
     }
 
     [Test]
@@ -100,7 +100,7 @@ public class OrderViewTests: BaseUiTests
         var actualAmount = _sut.GetAmountOf(_beer);
         actualAmount.Should().Be(2);
         TestReport.Pass($"The total amount of {_beer} is currently {actualAmount} as expected");
-        AttachScreenshot("IncreaseViaStepperButton");
+        AttachScreenshot("IncreaseViaStepperButton", "Verify stepper increased the total amount");
         
         TestReport.LogInfo($"Decrease quantity of {_beer} via stepper button");
         _sut.DecreaseProductQuantity(_beer);
@@ -108,7 +108,7 @@ public class OrderViewTests: BaseUiTests
         actualAmount = _sut.GetAmountOf(_beer);
         actualAmount.Should().Be(1);
         TestReport.Pass($"The total amount of {_beer} is currently {actualAmount} as expected");
-        AttachScreenshot("DecreaseViaStepperButton");
+        AttachScreenshot("DecreaseViaStepperButton", "Verify stepper decreased the total amount");
     }
 
     [Test]

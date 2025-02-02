@@ -27,7 +27,7 @@ public class BaseApplicationUiTests: BaseUiTests
         {
             TestReport.Fail( "ConfigView is not visible");
         }
-        AttachScreenshot("ConfigurationViewVisible");
+        AttachScreenshot("ConfigurationViewVisible", "Verify configuration view is visible");
         isConfigViewVisible.Should().BeTrue();
         var orderView = BartenderCalculatorApp.OpenOrderView();
         TestReport.LogInfo("Open Order View");
@@ -40,7 +40,7 @@ public class BaseApplicationUiTests: BaseUiTests
         {
             TestReport.Fail( "OrderView is not visible");
         }
-        AttachScreenshot("OrderViewVisible");
+        AttachScreenshot("OrderViewVisible", "Verify order view is visible");
         isOrderViewVisible.Should().BeTrue();
     }
 }

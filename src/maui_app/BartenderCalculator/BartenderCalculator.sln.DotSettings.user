@@ -61,6 +61,7 @@
     &lt;TestId&gt;NUnit3x::44B24738-F9B3-4A5D-A899-C45AFC1A3B20::net9.0::BartenderCalculator.Appium.Android.UiTests.Tests.ConfigurationViewUiTests.DeleteProduct_DeletingDummyProduct_ExpectToDeleteProduct&lt;/TestId&gt;
     &lt;TestId&gt;NUnit3x::44B24738-F9B3-4A5D-A899-C45AFC1A3B20::net9.0::BartenderCalculator.Appium.Android.UiTests.Tests.ConfigurationViewUiTests.EditProduct_AddDummyProductChangeNameToFooBar_ExpectProductToHaveTheNameFooBar&lt;/TestId&gt;
     &lt;TestId&gt;NUnit3x::44B24738-F9B3-4A5D-A899-C45AFC1A3B20::net9.0::BartenderCalculator.Appium.Android.UiTests.Tests.ConfigurationViewUiTests&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::44B24738-F9B3-4A5D-A899-C45AFC1A3B20::net9.0::BartenderCalculator.Appium.Android.UiTests.Tests.BaseApplicationUiTests&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/CheckedGroups/=BartenderCalculator_002FResources_002FStrings_002FAppResources/@EntryIndexedValue">True</s:Boolean>

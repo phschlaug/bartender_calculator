@@ -34,7 +34,7 @@ public class ConfigurationViewUiTests: BaseUiTests
 
         actualAmountOfProducts.Should().Be(expectedAmountOfProducts);
         TestReport.Pass($"The product list contains the expected number of products of {actualAmountOfProducts}");
-        AttachScreenshot("AddProductScreenshot");
+        AttachScreenshot("AddProductScreenshot", "Verify Product was added");
     }
 
     [Test]
@@ -45,15 +45,15 @@ public class ConfigurationViewUiTests: BaseUiTests
         _sut.AddProduct(_dummyProduct);
         var amountOfProducts = _sut.GetAmountOfProducts();
         amountOfProducts.Should().Be(1);
-        TestReport.Pass($"The amount of number is {amountOfProducts}, as ecxpected");
-        AttachScreenshot("ProveAddProductScreenshot");
+        TestReport.Pass($"The amount of number is {amountOfProducts}, as expected");
+        AttachScreenshot("ProveAddProductScreenshot", "Verify Product was added");
         
         TestReport.LogInfo($"Delete Product {_dummyProduct}");
         _sut.DeleteProductAt(0);
         
         _sut.GetAmountOfProducts().Should().Be(0);
         TestReport.Pass("The product list is empty, as expected");
-        AttachScreenshot("ProveDeleteProductScreenshot");
+        AttachScreenshot("ProveDeleteProductScreenshot", "Verify Product was removed");
     }
 
     [Test]
@@ -69,7 +69,7 @@ public class ConfigurationViewUiTests: BaseUiTests
         var productName = _sut.GetProductNameAt(0);
         productName.Should().Be(expectedName);
         TestReport.Pass($"The product name is {productName}, as expected");
-        AttachScreenshot("ChangedNameOfProduct");
+        AttachScreenshot("ChangedNameOfProduct", "Verify Product name was changed");
     }
 
     [Test]
@@ -86,7 +86,7 @@ public class ConfigurationViewUiTests: BaseUiTests
         var isAlertViewVisible = alertView.IsVisible();
         isAlertViewVisible.Should().BeTrue();
         TestReport.Pass("An alert view is visible");
-        AttachScreenshot("AlertViewEmptyName");
+        AttachScreenshot("AlertViewEmptyName", "Verify Alert View indicates that the name was empty");
         alertView.CloseAlertView();
     }
 
@@ -109,7 +109,7 @@ public class ConfigurationViewUiTests: BaseUiTests
         var products = _sut.GetAmountOfProducts();
         products.Should().Be(0);
         TestReport.Pass("The product list is empty");
-        AttachScreenshot("ProductListIsEmpty");
+        AttachScreenshot("ProductListIsEmpty", "Verify that product list is empty");
     }
 
     [Test]
@@ -125,7 +125,7 @@ public class ConfigurationViewUiTests: BaseUiTests
         if (alertView.IsVisible())
         {
             TestReport.LogInfo("An alert view is visible");
-            AttachScreenshot("SameNameProductNameAlert");
+            AttachScreenshot("SameNameProductNameAlert", "Alert View visible indicates same product name");
             alertView.CloseAlertView();
         }
         else
@@ -135,7 +135,7 @@ public class ConfigurationViewUiTests: BaseUiTests
         
         _sut.GetAmountOfProducts().Should().Be(1);
         TestReport.Pass("Only one product was added.");
-        AttachScreenshot("CorrectNumberOfProducts");
+        AttachScreenshot("CorrectNumberOfProducts", "Verify that only one product was added");
     }
 
     [Test]
@@ -148,7 +148,7 @@ public class ConfigurationViewUiTests: BaseUiTests
         if (alertView.IsVisible())
         {
             TestReport.LogInfo("An alert view is visible");
-            AttachScreenshot("SameNameProductNameAlert");
+            AttachScreenshot("SameNameProductNameAlert", "Alert View visible indicates same product name");
             alertView.CloseAlertView();
         }
         else
@@ -159,7 +159,7 @@ public class ConfigurationViewUiTests: BaseUiTests
         var actualAmountOfProducts = _sut.GetAmountOfProducts();
         actualAmountOfProducts.Should().Be(0);
         TestReport.Pass("The product list is empty");
-        AttachScreenshot("ProductListIsEmpty");
+        AttachScreenshot("ProductListIsEmpty", "Verify that product list is empty");
     }
 
     [Test]
@@ -172,7 +172,7 @@ public class ConfigurationViewUiTests: BaseUiTests
         if (alertView.IsVisible())
         {
             TestReport.LogInfo("An alert view is visible");
-            AttachScreenshot("InvalidNameNameValidPriceAlert");
+            AttachScreenshot("InvalidNameNameValidPriceAlert", "Alert View visible indicates invalid product name");
             alertView.CloseAlertView();
         }
         else
@@ -182,7 +182,7 @@ public class ConfigurationViewUiTests: BaseUiTests
         var actualAmountOfProducts = _sut.GetAmountOfProducts();
         actualAmountOfProducts.Should().Be(0);
         TestReport.Pass("The product list is empty");
-        AttachScreenshot("EmptyProductList");
+        AttachScreenshot("EmptyProductList", "Verify that empty product list is empty");
     }
 
     protected override void TestSpecificTearDown()

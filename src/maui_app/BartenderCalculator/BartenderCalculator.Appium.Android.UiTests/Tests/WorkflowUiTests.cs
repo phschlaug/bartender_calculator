@@ -40,13 +40,13 @@ public class WorkflowUiTests: BaseUiTests
         configurationView.DeleteProduct(_beer.Name);
         configurationView.GetAmountOfProducts().Should().Be(2);
         TestReport.Pass("Only two products are available");
-        AttachScreenshot("OnlyTwoProductsStored");
+        AttachScreenshot("OnlyTwoProductsStored", "Verify that only two products are stored");
 
         TestReport.LogInfo("Switching back to Order View");
         orderView = BartenderCalculatorApp.OpenOrderView();
         orderView.GetTotalPrice().Should().Be(0);
         TestReport.Pass($"Total price is 0 as expected");
-        AttachScreenshot("OrderIsEmpty");
+        AttachScreenshot("OrderIsEmpty", "Verify that the order is empty");
     }
 
     protected override void TestSpecificTearDown()
