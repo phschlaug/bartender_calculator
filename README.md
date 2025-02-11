@@ -6,6 +6,19 @@
 
 The Bartender App is a user-friendly tool designed to streamline the workflow for bartenders, making it easier to manage and process drink orders with efficiency and accuracy.This app simplifies the process of managing drink orders, reducing errors, and speeding up service, which enhances the overall efficiency of bartenders.
 
+Fast and Easy Checkout at Festivals – With Our App! 🎡💰
+Our app makes checkout seamless at festivals, markets, and events! 🚀
+
+✔ Manage Products – Create and store items with custom prices.
+
+✔ Easy Order Processing – Select products with a tap and create orders in seconds.
+
+✔ Automatic Price Calculation – The total price is displayed instantly – no manual calculations needed!
+
+✔ Fast and Efficient – Reduce waiting times and streamline your sales process.
+
+Make checkout stress-free and focus on your customers! Download now and get started! 🎉
+
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![GitHub Issues](https://img.shields.io/github/issues/phschlaug/bartender_calculator)](https://github.com/phschlaug/artender_calculator/issues)
 
